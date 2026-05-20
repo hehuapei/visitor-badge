@@ -1,94 +1,142 @@
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge)  
+<p align="center">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=hehuapei.visitor-badge&left_text=Visitors" alt="visitor badge">
+</p>
 
-#### Project Home
-> [https://visitor-badge.laobi.icu](https://visitor-badge.laobi.icu)
+<h1 align="center">👀 Visitor Badge</h1>
+<p align="center">
+  A free, lightweight visitor counter badge for your GitHub README, Issues, and Wiki pages.
+  <br>One line of Markdown. No sign-up. No tracking. Just a badge.
+</p>
 
-#### Usage
-- default style
+<p align="center">
+  <a href="#quick-start">Quick Start</a> ·
+  <a href="#parameters">Parameters</a> ·
+  <a href="#examples">Examples</a> ·
+  <a href="#deploy">Self-host</a>
+</p>
 
-```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge)
-```
+---
 
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge)
+## Quick Start
 
-- customized left text (default is `visitors`)
-
-```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=MyPageVisitors)
-```
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=MyPageVisitors)
-
-- customized left text with a space between words
-
-```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=My%20Page%20Visitors)
-```
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=My%20Page%20Visitors)
-
-- customzied color(RGB colors see also [#6](/../../issues/6))
-
-```markdown 
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green) 
-RGB colors eg: #595959 needs to be %23595959 in the URL
-```
-
-
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green) (left_color=red, right_color=green)
-
-- customized color and left text
+Add this line to your `README.md`:
 
 ```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green&left_text=HelloVisitors)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=yourname.yourrepo)
 ```
 
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green&left_text=HelloVisitors) (left_color=red, right_color=green, left_text=HelloVisitors)
+Replace `yourname.yourrepo` with a unique identifier for your page. Done.
 
-- customized color and a space between words in left text
+---
+
+## Parameters
+
+All parameters are optional except `page_id`.
+
+| Parameter | Required | Description | Default |
+|---|---|---|---|
+| `page_id` | ✅ | Unique identifier for your page | — |
+| `left_text` | — | Left-side label | `visitors` |
+| `left_color` | — | Left side color (name or hex) | `#595959` |
+| `right_color` | — | Right side color (name or hex) | `#1283c3` |
+| `format` | — | Compact number display (1K / 1M) | disabled |
+| `query_only` | — | Query without incrementing counter | disabled |
+
+> **Note:** For hex colors with `#`, URL-encode `#` as `%23`.  
+> Example: `#595959` → `%23595959`
+
+---
+
+## Examples
+
+**Default style**
 
 ```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green&left_text=Hello%20Visitors)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge)
 ```
 
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green&left_text=Hello%20Visitors) (left_color=red, right_color=green, left_text=Hello%20Visitors)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge)
 
-- Only query the counter state without updating it [#7](/../../issues/7)
-```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge-query&query_only=true)
-```
-
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge-query&query_only=true)
-
-
-- format unit of count (default is `disable`) [#4](/../../issues/4)
+**Custom colors**
 
 ```markdown
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&format=true)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green)
 ```
-![visitor badge](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&format=true)
 
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_color=red&right_color=green)
 
-#### Feature
-- **2022.09.20**  
-1. add new parameters: format
+**Custom label**
 
-- **2022.06.14**  
-1. add new parameters: query_only
+```markdown
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=Views)
+```
 
-- **2020.07.19**  
-1. Daily data backup: Perform data backup and push to GitHub warehouse at 0 o 'clock per day  
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=Views)
 
-- **2020.07.18**  
-1. You can use parameter 'title' to change badge's title！  
-**tips: The title Poor compatibility to chines**  
-Official: [link](https://pypi.org/project/pybadges/)  
-pybadges uses a pre-calculated table of text widths and kerning distances (for western glyphs) to determine the size of the badge. So Eastern European languages  may be rendered less well than Western European ones:  
-and glyphs not present in Deja Vu Sans (the default font) may be rendered very poorly:  
-pybadges does not have any explicit support for languages that are written right-to-left (e.g. Arabic, Hebrew) and the displayed text direction may be incorrect:  
- 
-- **2020.07.17**  
-1. Change count-api to my own service, optimize the counting speed.   
-2. It facilitates later functions (data analysis, data backup, etc.)
+**Compact format (1K / 1M)**
 
-#### Fork From
-> jwenjian: [https://github.com/jwenjian/visitor-badge](https://github.com/jwenjian/visitor-badge)
+```markdown
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&format=true)
+```
+
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&format=true)
+
+**Query only (don't increment)**
+
+```markdown
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&query_only=true)
+```
+
+**Combo: all together**
+
+```markdown
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=Views&left_color=%23595959&right_color=%231283c3&format=true)
+```
+
+---
+
+## Use in HTML
+
+```html
+<img src="https://visitor-badge.laobi.icu/badge?page_id=yourname.yourrepo" alt="visitor badge">
+```
+
+---
+
+## Self-host
+
+Clone the repo, install dependencies, and run:
+
+```bash
+git clone https://github.com/hehuapei/visitor-badge.git
+cd visitor-badge
+pip install -r requirements.txt
+# Set your count API endpoint in main.py
+python3 main.py
+```
+
+Requires a compatible counting backend. The project expects a count service at a configurable endpoint. See `main.py` for details.
+
+---
+
+## Features
+
+- ✅ Free & no registration
+- ✅ Custom colors (left & right)
+- ✅ Custom label text
+- ✅ Compact number format (1K / 1M)
+- ✅ Query-only mode (no count increment)
+- ✅ Daily data backup
+- ✅ Lightweight SVG response
+
+---
+
+## Credits
+
+Forked from [jwenjian/visitor-badge](https://github.com/jwenjian/visitor-badge) with optimizations and updated infrastructure.
+
+---
+
+<p align="center">
+  <a href="https://github.com/hehuapei/visitor-badge">⭐ Star on GitHub</a>
+</p>
