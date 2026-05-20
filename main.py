@@ -103,7 +103,7 @@ def visitor_svg() -> Response:
 @app.route("/health")
 def health():
     try:
-        resp = requests.get('http://http://127.0.0.1:8080/count?keyword=health&action=query', timeout=5)
+        resp = requests.get('http://127.0.0.1:8080/count?keyword=health&action=query', timeout=5)
         if resp.status_code == 200:
             return {'status': 'ok', 'count': resp.json().get('value', 0)}
         return {'status': 'error'}, 502
