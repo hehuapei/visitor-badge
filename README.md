@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://visitor-badge.laobi.icu/badge?page_id=hehuapei.visitor-badge&left_text=Visitors" alt="visitor badge">
-</p>
-
 <h1 align="center">👀 Visitor Badge</h1>
 <p align="center">
   A free, lightweight visitor counter badge for your GitHub README, Issues, and Wiki pages.
@@ -15,6 +11,9 @@
   <a href="#deploy">Self-host</a>
 </p>
 
+<p align="center">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=hehuapei.visitor-badge&left_text=Visitors" alt="visitor badge">
+</p>
 ---
 
 ## Quick Start
