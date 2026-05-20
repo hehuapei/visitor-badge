@@ -231,7 +231,7 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
     </div>
     <div class="code-block">
       <button class="copy-btn" id="copyBtn" data-i18n="copy_btn">复制</button>
-      <pre><code id="codeContent">![visitors](http://192.168.2.157:55000/badge?page_id=username.project)</code></pre>
+      <pre><code id="codeContent">![visitors](/badge?page_id=username.project)</code></pre>
     </div>
   </div>
 </div>
@@ -427,7 +427,7 @@ document.querySelectorAll('.lang-switch button').forEach(btn=>{
 })();
 
 // ===== Badge Builder =====
-const BASE='http://192.168.2.157:55000';
+const BASE = window.location.origin;
 const pidIn=document.getElementById('pid');
 const ltextIn=document.getElementById('ltext');
 const lcolorIn=document.getElementById('lcolor');
