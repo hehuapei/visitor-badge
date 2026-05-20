@@ -100,6 +100,17 @@ def visitor_svg() -> Response:
     return Response(response=svg, content_type="image/svg+xml", headers=headers)
 
 
+@app.route("/health")
+def health():
+    try:
+        resp = requests.get('http://http://127.0.0.1:8080/count?keyword=health&action=query', timeout=5)
+        if resp.status_code == 200:
+            return {'status': 'ok', 'count': resp.json().get('value', 0)}
+        return {'status': 'error'}, 502
+    except Exception as e:
+        return {'status': 'error', 'detail': str(e)}, 502
+
+
 @app.route("/index.html")
 @app.route("/index")
 @app.route("/")
@@ -117,4 +128,4 @@ def identity_request_source() -> str:
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1',port=55000)
+    app.run(host='0.0.0.0',port=55000)
