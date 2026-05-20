@@ -1,149 +1,559 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <link rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👀</text></svg>">
-    <!--    replace with cdn address-->
-    <link rel="stylesheet" href="https://andybrewer.github.io/mvp/mvp.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="免费的 GitHub Markdown 访客计数徽章服务。Free visitor badge for your GitHub README, Issues, and PRs.">
+<meta name="keywords" content="visitor count,visitor badge,github badge,markdown,readme,免费访客计数">
+<title>Visitor Badge · 访客计数徽章</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👀</text></svg>">
+<style>
+/* ===== Reset & Variables ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f9fa;--surface:#fff;--text:#1a1a2e;--text2:#555;
+  --border:#e0e0e0;--accent:#1283c3;--accent2:#0d6efd;
+  --radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+[data-theme=dark]{
+  --bg:#0d1117;--surface:#161b22;--text:#e6edf3;--text2:#8b949e;
+  --border:#30363d;--shadow:0 2px 12px rgba(0,0,0,.3);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;height:auto}
+code{font-family:var(--mono);font-size:.875em;background:var(--border);padding:2px 6px;border-radius:4px}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;overflow-x:auto;position:relative}
+pre code{background:none;padding:0;font-size:.85rem}
+::selection{background:var(--accent);color:#fff}
 
-    <meta charset="utf-8">
-    <!--    keywords-->
-    <meta name="keywords" content="visitor count,visitor track,badge, markdown, github, free">
-    <!--    description-->
-    <meta name="description"
-          content="Visitor badge for markdown file, put it in your GitHub README.md to know how many uses visited your repo! For Free!">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* ===== Container ===== */
+.container{max-width:880px;margin:0 auto;padding:0 20px}
 
-    <title>Visitor Badge</title>
-    <script data-ad-client="ca-pub-1796190311458057" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+/* ===== Top Bar ===== */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.1rem;color:var(--text)}
+.topbar-logo svg{width:28px;height:28px}
+.topbar nav{display:flex;align-items:center;gap:16px}
+.topbar nav a{font-size:.9rem;color:var(--text2);transition:color .15s}
+.topbar nav a:hover{color:var(--text);text-decoration:none}
+.lang-switch{display:flex;gap:4px}
+.lang-switch button{background:none;border:1px solid var(--border);padding:3px 10px;border-radius:5px;cursor:pointer;font-size:.8rem;color:var(--text2);transition:all .15s}
+.lang-switch button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.theme-toggle{background:none;border:1px solid var(--border);border-radius:5px;cursor:pointer;padding:4px 8px;font-size:1rem;line-height:1;color:var(--text2)}
+
+/* ===== Hero ===== */
+.hero{text-align:center;padding:60px 20px 40px}
+.hero h1{font-size:2rem;font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
+.hero p{color:var(--text2);font-size:1.05rem;max-width:580px;margin:0 auto 28px}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-actions a{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:8px;font-weight:600;font-size:.95rem;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);text-decoration:none;transform:translateY(-1px)}
+.btn-outline{border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{background:var(--surface);text-decoration:none}
+
+/* ===== Health Indicator ===== */
+.health{margin-top:20px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:.85rem;color:var(--text2)}
+.health-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.health-dot.ok{background:#2ea043;box-shadow:0 0 6px rgba(46,160,67,.4)}
+.health-dot.err{background:#da3633;box-shadow:0 0 6px rgba(218,54,51,.4)}
+.health-dot.loading{background:#d29922;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ===== Card ===== */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.card-title{font-size:1.1rem;font-weight:700;margin-bottom:16px}
+
+/* ===== Builder ===== */
+.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:640px){.builder-grid{grid-template-columns:1fr}}
+.preview-area{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;background:var(--bg);border:1px dashed var(--border);border-radius:var(--radius);padding:24px}
+.preview-area img{image-rendering:pixelated}
+.preview-url{font-size:.75rem;color:var(--text2);word-break:break-all;text-align:center;margin-top:12px;max-width:100%}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.85rem;font-weight:600;margin-bottom:4px;color:var(--text2)}
+.form-group input,.form-group select{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:.9rem;font-family:var(--mono)}
+.form-group input:focus{outline:2px solid var(--accent);border-color:transparent}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.color-input{position:relative;display:flex;align-items:center}
+.color-input input[type=text]{flex:1;padding-right:36px;font-family:var(--mono)}
+.checkbox-line{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.85rem;font-weight:400;color:var(--text2)}
+.checkbox-line input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--accent)}
+.color-input .color-btn{position:absolute;right:2px;top:2px;bottom:2px;width:30px;border-radius:5px;cursor:pointer;overflow:hidden;border:none;padding:0;display:flex;align-items:center;justify-content:center}
+.color-input .color-btn:hover{filter:brightness(1.1)}
+.color-input .color-btn input[type=color]{position:absolute;opacity:0;cursor:pointer;width:40px;height:40px;top:-4px;left:-4px}
+.color-input input[type=text]{border:1px solid var(--border)}
+
+/* ===== Code Block ===== */
+.code-tabs{display:flex;gap:0;margin-bottom:0;border-bottom:1px solid var(--border)}
+.code-tab{padding:8px 16px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--text2);border-bottom:2px solid transparent;transition:all .15s}
+.code-tab:hover{color:var(--text)}
+.code-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.code-block{margin-top:12px;position:relative}
+.copy-btn{position:absolute;top:8px;right:8px;padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;cursor:pointer;font-size:.75rem;color:var(--text2);transition:all .15s;z-index:1}
+.copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ===== Section ===== */
+.section{padding:32px 20px}
+.section-title{font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.section-sub{color:var(--text2);margin-bottom:24px;font-size:.95rem}
+
+/* ===== Param Table ===== */
+.param-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.param-table th,.param-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+.param-table th{font-weight:600;color:var(--text2);font-size:.8rem;text-transform:uppercase}
+.param-table tr:last-child td{border-bottom:none}
+.param-table code{font-size:.82rem}
+
+/* ===== FAQ ===== */
+details{margin-bottom:10px}
+details summary{cursor:pointer;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-size:1.2rem;color:var(--text2);transition:transform .2s}
+details[open] summary::after{content:"−"}
+details .faq-body{padding:12px 0 8px;color:var(--text2);font-size:.92rem;line-height:1.7}
+
+/* ===== Footer ===== */
+footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);color:var(--text2);font-size:.85rem}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 20px;border-radius:8px;font-size:.85rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
 </head>
-
 <body>
-<header>
-    <nav>
-        <a href="/">
-            <svg xmlns="http://www.w3.org/2000/svg" height="70" data-v-423bf9ae="" viewBox="0 0 383.4224624176554 181"
-                 class="iconAbove"><!----><!----><!---->
-                <g data-v-423bf9ae="" id="43ed7639-6444-49ea-82e7-c83eaa18d814" fill="black"
-                   transform="matrix(4.5836515890443295,0,0,4.5836515890443295,-1.2834212056395984,98.96630848574733)">
-                    <path fill="var(--color-secondary)"
-                          d="M1.61 7.88L0.28 7.88L2.87 14.88L4.51 14.88L7.10 7.88L5.77 7.88L3.70 13.59L3.67 13.59ZM9.86 7.88L8.50 7.88L8.50 14.88L9.86 14.88ZM8.43 6.16L9.93 6.16L9.93 4.66L8.43 4.66ZM17.36 11.66L15.74 10.72L13.45 10.72L13.45 9.10L17.22 9.10L17.22 7.88L13.72 7.88L12.10 8.82L12.10 11.00L13.72 11.94L16.00 11.94L16.00 13.66L12.10 13.66L12.10 14.88L15.74 14.88L17.36 13.94ZM20.96 7.88L19.60 7.88L19.60 14.88L20.96 14.88ZM19.53 6.16L21.03 6.16L21.03 4.66L19.53 4.66ZM22.64 9.10L23.93 9.10L23.93 13.94L25.55 14.88L26.96 14.88L26.96 13.66L25.28 13.66L25.28 9.10L26.96 9.10L26.96 7.88L25.28 7.88L25.28 5.92L23.93 6.71L23.93 7.88L22.64 7.88ZM34.87 14.01L34.87 8.75L33.25 7.81L30.55 7.81L28.92 8.75L28.92 14.01L30.55 14.95L33.25 14.95ZM30.28 9.03L33.52 9.03L33.52 13.73L30.28 13.73ZM41.02 9.10L41.02 7.88L39.47 7.88L38.47 8.46L38.14 7.88L37.11 7.88L37.11 14.88L38.47 14.88L38.47 9.10ZM48.55 7.81L47.56 8.39L47.56 4.66L46.20 4.66L46.20 14.95L46.56 14.95L47.56 14.38L48.55 14.95L50.67 14.95L52.29 14.01L52.29 8.75L50.67 7.81ZM47.56 9.03L50.93 9.03L50.93 13.73L47.56 13.73ZM55.61 12.01L58.42 12.01L58.42 13.73L55.61 13.73ZM55.87 14.95L57.43 14.95L58.42 14.38L59.42 14.95L59.78 14.95L59.78 8.82L58.16 7.88L54.95 7.88L54.95 9.10L58.42 9.10L58.42 10.79L55.87 10.79L54.25 11.73L54.25 14.01ZM63.64 7.81L62.02 8.75L62.02 14.01L63.64 14.95L65.76 14.95L66.75 14.38L67.09 14.95L68.11 14.95L68.11 4.66L66.75 4.66L66.75 8.39L65.76 7.81ZM66.75 13.73L63.38 13.73L63.38 9.03L66.75 9.03ZM71.71 14.88L75.08 14.88L75.08 16.56L71.43 16.56L71.43 15.16L70.07 15.95L70.07 16.81L71.69 17.75L74.82 17.75L76.44 16.81L76.44 14.60L74.82 13.66L71.71 13.66L71.71 12.47L74.40 12.47L76.02 11.54L76.02 9.60L75.17 9.10L76.44 8.36L76.44 7.88L71.97 7.88L70.35 8.82L70.35 11.69L71.34 12.26L70.35 12.84L70.35 14.10ZM71.71 9.07L74.66 9.07L74.66 11.28L71.71 11.28ZM83.93 13.66L79.76 13.66L79.76 11.86L83.93 11.86L83.93 8.75L82.31 7.81L80.02 7.81L78.40 8.75L78.40 13.94L80.02 14.88L83.93 14.88ZM79.76 9.03L82.57 9.03L82.57 10.64L79.76 10.64Z"/>
-                </g><!---->
-                <g data-v-423bf9ae="" id="2b2ae3d6-3651-41c8-95f7-e4100d2e5eec"
-                   transform="matrix(1.0920221964518229,0,0,1.0920221964518229,140.41899121005312,-0.7291334260255979)"
-                   stroke="none" fill="black">
-                    <path fill="var(--color-secondary)"
-                          d="M78.145 94.255L64.9 30.442c4.664-5.837 12.566-10.411 12.566-10.411L80.481 9.58l-22.658-.844L56.361.718 34.34 53.39 22.478 90.057c-2.164-1.028-6.174-3.531-10.188-9.166 0 0-1.592 9.185 2.641 14.404 1.694 2.091 5.03 3.705 5.03 3.705h54.79c0-5.626-14.593-6.731-14.593-6.731 0-.888-.061-2.269-.167-2.269h-.163s.033-1.654-.617-3.688c-.02-.062-.037-.264-.059-.324-.034-.104-.074-.284-.114-.393a17.97 17.97 0 0 0-1.403-2.976c-2.237-3.713-6.753-8.108-15.88-10.865l1.422-2.558s10.452 2.241 16.018 9.799l3.149-10.657L70.141 92h.031c.101 0 7.585 2.08 7.585 7h4.709s-.896-3.479-4.321-4.745z"/>
-                </g><!----></svg>
-        </a>
-        <ul>
-            <li>Home</li>
-            <li><a href="#">Docs</a></li>
-            <li><a href="https://github.com/hehuapei/visitor-badge" target="_blank">GitHub &nearr;</a></li>
-        </ul>
-    </nav>
-    <h1>Count visitors for your <i>README.md, Issues, PRs</i> in <u>GitHub</u></h1>
-    <p>in just
-        <mark>one line markdown code</mark>
-    </p>
-    <p><img src="https://visitor-badge.laobi.icu/badge?page_id=visitor-badge.laobi.icu"></p>
-    <br>
-    <p><a href="https://github.com/hehuapei/visitor-badge"><i>💗 Give a Star 💗</i></a><a href="#docs"><b>Getting started</b></a></p>
-</header>
-<main>
-    <hr>
-    <article id="docs">
-        <h2>Docs</h2>
-        <p>How to use?</p>
-        <aside>
-            <p>If you know how to add picture in markdown, then you are good to go.</p>
-        </aside>
-        <p>All you have to do is to add below
-            <mark>markdown markup</mark>
-            to your markdown content:
-        </p>
-        <pre>
-                <code lang="markdown">
-                    ![visitors](https://visitor-badge.laobi.icu/badge?page_id=page.id)
-                </code>
-            </pre>
-            <p>In which, </p>
-        <p>The url parameter
-            <mark>page_id</mark>
-            is <b>REQUIRED</b>, please use the unique string to best represent your page.
-        </p>
-        
-        <p id="page_id_rule">I recommend you to follow <code>page_id</code> rules below:</p>
-        <ol>
-            <li>For README.md file, use <i>${your.username}.${your.repo.id}</i>, <code>https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge</code>
-                for example.
-            </li>
-            <li>For Issue body, use <i>${your.username}.${your.repo.id}.issue.${issue.id}</i>, <code>https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge.issue.1</code>
-                for example.
-            </li>
-        </ol>
-        <p>or any other markdown content, please give an unique string to distinguish</p>
 
-        <p>The url parameter <mark>left_color</mark> and <mark>right_color</mark> is optional, you can customize the badge color by passing the two parameters.</p>
-
-        <p>The values supports color names(like green) and RGB in hex string starts with a hashtag(like #66ccff)
-        </p>
-    </article>
-    <hr>
-    <div id="faq">
-        <header>
-            <h2>FAQ</h2>
-        </header>
-        <details id="faq-use-in-html">
-            <summary>Can I use this in HTML file?</summary>
-            <p>Sure!</p>
-            <p>All you have to do is to insert a <code>&lt;img&gt;</code> to your HTML:</p>
-            <pre>
-                    <code lang="html">
-                        &lt;img src="https://visitor-badge.laobi.icu/badge?page_id=page.id" alt="visitor badge"/&gt;
-                    </code>
-                </pre>
-            <p>For page_id parameter, follow <a href="#page_id_rule">the rules.</a></p>
-        </details>
-        <details>
-            <summary>Is this free?</summary>
-            <p>Yes and it will always be free and no limitations!</p>
-            <p>If you found this useful, you can <a href="#donation"><a
-                    href="https://github.com/hehuapei/visitor-badge" target="_blank">give a star ✨</a></p>
-        </details>
+<!-- Top Bar -->
+<div class="topbar">
+  <a href="/" class="topbar-logo">
+    <svg viewBox="0 0 100 100"><text y=".9em" font-size="90">👀</text></svg>
+    Visitor Badge
+  </a>
+  <nav>
+    <a href="#" data-i18n="nav_home">首页</a>
+    <a href="#docs" data-i18n="nav_docs">文档</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    <a href="https://github.com/hehuapei/visitor-badge" target="_blank">GitHub ↗</a>
+    <div class="lang-switch">
+      <button data-lang="zh">中</button>
+      <button data-lang="en" class="active">EN</button>
     </div>
-    <hr>
-    <section>
-        <header>
-            <h2>What's next?</h2>
-            <p>What new features will be available in the next release?</p>
-        </header>
-        <aside>
-            <h3>Data backup regularly</h3>
-            <p>Backup the latest data into a safe place weekly and make it recoverable</p>
-        </aside>
-        <aside>
-            <h3>Count by day support</h3>
-            <p>The badge is counting visitors in all time, but it will be more useful to count visitors in current
-                date（24h）</p>
-        </aside>
-        <aside>
-            <h3>Statistics</h3>
-            <p>Line chart of visitors in latest 7 days</p>
-        </aside>
-        <aside>
-            <h3>Not your expectation?</h3>
-            <p><a href="https://github.com/hehuapei/visitor-badge/issues/new" target="_blank">Just tell me...</a></p>
-        </aside>
-    </section>
-</main>
-<footer>
-    <hr>
-    <p>
-        Made by <a href="https://github.com/hehuapei" target="_blank">wiken</a> and ❤️
-    </p>
-</footer>
-</body>
+    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button>
+  </nav>
+</div>
 
+<!-- Hero -->
+<section class="hero">
+  <h1 data-i18n="hero_title">为你的 GitHub 项目添加访客徽章</h1>
+  <p data-i18n="hero_desc">一行代码，追踪 README、Issues 和 Wiki 的浏览量。完全免费，无需注册。</p>
+  <div class="hero-actions">
+    <a href="#builder" class="btn-primary" data-i18n="hero_cta1">🎨 开始定制</a>
+    <a href="#docs" class="btn-outline" data-i18n="hero_cta2">📖 查看文档</a>
+    <a href="https://github.com/hehuapei/visitor-badge" class="btn-outline" target="_blank">⭐ GitHub</a>
+  </div>
+  <div class="health">
+    <span class="health-dot loading" id="healthDot"></span>
+    <span id="healthText" data-health="checking">正在检查服务状态…</span>
+  </div>
+</section>
+
+<!-- Badge Builder -->
+<div class="container" id="builder">
+  <div class="card">
+    <div class="card-title" data-i18n="builder_title">🎨 Badge 在线定制</div>
+    <div class="builder-grid">
+      <div>
+        <div class="form-group">
+          <label for="pid" data-i18n="builder_pid">页面 ID *</label>
+          <input id="pid" value="username.visitor-badge" placeholder="username.repo-id" spellcheck="false">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ltext" data-i18n="builder_ltext">左侧文字</label>
+            <input id="ltext" value="" placeholder="visitors" data-default="visitors">
+          </div>
+          <div class="form-group">
+            <label for="fmt" data-i18n="builder_format">数值格式</label>
+            <select id="fmt"><option value="">原始</option><option value="1">1K / 1M</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="lcolor" data-i18n="builder_lcolor">左侧颜色</label>
+            <div class="color-input">
+              <input id="lcolor" value="" placeholder="#595959" spellcheck="false" data-default="#595959">
+              <span class="color-btn" id="lbtn" style="background:#595959">
+                <input type="color" id="lPicker" value="#595959">
+                <span style="font-size:12px;color:#fff;mix-blend-mode:difference;pointer-events:none">🎨</span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="rcolor" data-i18n="builder_rcolor">右侧颜色</label>
+            <div class="color-input">
+              <input id="rcolor" value="" placeholder="#1283c3" spellcheck="false" data-default="#1283c3">
+              <span class="color-btn" id="rbtn" style="background:#1283c3">
+                <input type="color" id="rPicker" value="#1283c3">
+                <span style="font-size:12px;color:#fff;mix-blend-mode:difference;pointer-events:none">🎨</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:8px">
+          <label class="checkbox-line">
+            <input type="checkbox" id="qonly">
+            <span data-i18n="builder_qonly">仅查询，不增加计数</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <label style="display:block;font-size:.85rem;font-weight:600;margin-bottom:8px;color:var(--text2)" data-i18n="builder_preview">预览</label>
+        <div class="preview-area" id="previewArea">
+          <img id="previewImg" alt="badge preview" style="opacity:1;transition:opacity .15s">
+          <div class="preview-url" id="previewUrl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy Sections -->
+  <div class="card">
+    <div class="card-title" data-i18n="copy_title">📋 复制代码</div>
+    <div class="code-tabs">
+      <span class="code-tab active" data-tab="markdown">Markdown</span>
+      <span class="code-tab" data-tab="html">HTML</span>
+      <span class="code-tab" data-tab="url">URL</span>
+    </div>
+    <div class="code-block">
+      <button class="copy-btn" id="copyBtn" data-i18n="copy_btn">复制</button>
+      <pre><code id="codeContent">![visitors](http://192.168.2.157:55000/badge?page_id=username.project)</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- Docs -->
+<section class="section" id="docs">
+  <div class="container">
+    <h2 class="section-title" data-i18n="docs_title">📖 参数说明</h2>
+    <p class="section-sub" data-i18n="docs_sub">所有参数均可选，除 page_id 外</p>
+    <table class="param-table">
+      <thead><tr><th data-i18n="param_name">参数</th><th data-i18n="param_required">必填</th><th data-i18n="param_desc">说明</th><th data-i18n="param_example">示例</th></tr></thead>
+      <tbody>
+        <tr><td><code>page_id</code></td><td data-i18n="yes">✅</td><td data-i18n="pid_desc">页面的唯一标识，建议用 <code>用户名.仓库名</code></td><td><code>jwenjian.visitor-badge</code></td></tr>
+        <tr><td><code>left_text</code></td><td data-i18n="no">—</td><td data-i18n="ltext_desc">徽章左侧文字</td><td><code>visitors</code></td></tr>
+        <tr><td><code>left_color</code></td><td data-i18n="no">—</td><td data-i18n="lcolor_desc">左侧颜色（名称或 HEX）</td><td><code>#595959</code></td></tr>
+        <tr><td><code>right_color</code></td><td data-i18n="no">—</td><td data-i18n="rcolor_desc">右侧颜色（名称或 HEX）</td><td><code>#1283c3</code></td></tr>
+        <tr><td><code>format</code></td><td data-i18n="no">—</td><td data-i18n="fmt_desc">启用数值缩写（1K / 1M）</td><td><code>true</code></td></tr>
+        <tr><td><code>query_only</code></td><td data-i18n="no">—</td><td data-i18n="qonly_desc">只查询不增加计数</td><td><code>true</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <h2 class="section-title" data-i18n="faq_title">❓ FAQ</h2>
+    <p class="section-sub" data-i18n="faq_sub">常见问题</p>
+
+    <details>
+      <summary data-i18n="faq1_q">能在 HTML 里用吗？</summary>
+      <div class="faq-body" data-i18n="faq1_a">可以，直接用 <code>&lt;img&gt;</code> 标签即可。</div>
+    </details>
+    <details>
+      <summary data-i18n="faq2_q">数据会丢吗？</summary>
+      <div class="faq-body" data-i18n="faq2_a">每日自动备份，服务稳定的前提下不会丢失计数。</div>
+    </details>
+    <details>
+      <summary data-i18n="faq3_q">完全免费？</summary>
+      <div class="faq-body" data-i18n="faq3_a">是的，永久免费，没有隐藏限制。如果觉得好用，给个 ⭐ 就行。</div>
+    </details>
+    <details>
+      <summary data-i18n="faq4_q">计数规则是什么？</summary>
+      <div class="faq-body" data-i18n="faq4_a">每个 <code>page_id</code> 独立计数，同一页面每次加载 +1。使用 <code>query_only=true</code> 可以不增加计数只查询。</div>
+    </details>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>Made with ❤️ by <a href="https://github.com/hehuapei" target="_blank">wiken</a> · <a href="https://github.com/hehuapei/visitor-badge" target="_blank">GitHub</a></p>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== I18n =====
+const I18N = {
+  zh: {
+    nav_home:'首页',nav_docs:'文档',nav_faq:'FAQ',
+    hero_title:'为你的 GitHub 项目添加访客徽章',
+    hero_desc:'一行代码，追踪 README、Issues 和 Wiki 的浏览量。完全免费，无需注册。',
+    hero_cta1:'🎨 开始定制',hero_cta2:'📖 查看文档',
+    health_checking:'正在检查服务状态…',health_ok:'服务正常',health_err:'服务异常',
+    builder_title:'🎨 Badge 在线定制',
+    builder_pid:'页面 ID *',builder_ltext:'左侧文字',builder_format:'数值格式',
+    builder_lcolor:'左侧颜色',builder_rcolor:'右侧颜色',builder_qonly:'仅查询，不增加计数',builder_preview:'预览',
+    copy_title:'📋 复制代码',copy_btn:'复制',copied:'已复制！',
+    docs_title:'📖 参数说明',docs_sub:'所有参数均为可选，除 page_id 外',
+    param_name:'参数',param_required:'必填',param_desc:'说明',param_example:'示例',
+    yes:'✅',no:'—',
+    pid_desc:'页面的唯一标识，建议用 用户名.仓库名',
+    ltext_desc:'徽章左侧文字',lcolor_desc:'左侧颜色（名称或 HEX）',
+    rcolor_desc:'右侧颜色（名称或 HEX）',fmt_desc:'启用数值缩写（1K / 1M）',
+    qonly_desc:'只查询不增加计数',
+    faq_title:'❓ FAQ',faq_sub:'常见问题',
+    faq1_q:'能在 HTML 里用吗？',
+    faq1_a:'可以，直接用 &lt;img&gt; 标签即可。',
+    faq2_q:'数据会丢吗？',
+    faq2_a:'每日自动备份，服务稳定的前提下不会丢失计数。',
+    faq3_q:'完全免费？',
+    faq3_a:'是的，永久免费，没有隐藏限制。如果觉得好用，给个 ⭐ 就行。',
+    faq4_q:'计数规则是什么？',
+    faq4_a:'每个 page_id 独立计数，同一页面每次加载 +1。使用 query_only=true 可以不增加计数只查询。',
+    fmt_raw:'原始',fmt_k:'1K / 1M',
+    no_copy:'当前浏览器不支持复制',
+    tip_placeholder:'username.visitor-badge',
+  },
+  en: {
+    nav_home:'Home',nav_docs:'Docs',nav_faq:'FAQ',
+    hero_title:'Visitor Badge for Your GitHub Projects',
+    hero_desc:'Track page views for README, Issues, and Wiki with one line of Markdown. Free, no sign-up required.',
+    hero_cta1:'🎨 Customize',hero_cta2:'📖 Read Docs',
+    health_checking:'Checking service status…',health_ok:'Service healthy',health_err:'Service unavailable',
+    builder_title:'🎨 Badge Builder',
+    builder_pid:'Page ID *',builder_ltext:'Left text',builder_format:'Format',
+    builder_lcolor:'Left color',builder_rcolor:'Right color',builder_qonly:'Query only, no increment',builder_preview:'Preview',
+    copy_title:'📋 Copy Code',copy_btn:'Copy',copied:'Copied!',
+    docs_title:'📖 Parameters',docs_sub:'All parameters are optional except page_id',
+    param_name:'Parameter',param_required:'Required',param_desc:'Description',param_example:'Example',
+    yes:'✅',no:'—',
+    pid_desc:'Unique page identifier, e.g. username.repo-name',
+    ltext_desc:'Left-side label text',lcolor_desc:'Left color (name or HEX)',
+    rcolor_desc:'Right color (name or HEX)',fmt_desc:'Compact number format (1K / 1M)',
+    qonly_desc:'Query only, do not increment',
+    faq_title:'❓ FAQ',faq_sub:'Frequently asked questions',
+    faq1_q:'Can I use this in HTML?',
+    faq1_a:'Yes, just use the &lt;img&gt; tag.',
+    faq2_q:'Will my data be lost?',
+    faq2_a:'Daily backups are performed. Counts are safe under normal service conditions.',
+    faq3_q:'Is it free?',
+    faq3_a:'Yes, completely free with no hidden limits. If you find it useful, give it a ⭐!',
+    faq4_q:'How does counting work?',
+    faq4_a:'Each page_id counts independently. Each page load +1. Use query_only=true to check without incrementing.',
+    fmt_raw:'Raw',fmt_k:'1K / 1M',
+    no_copy:'Clipboard not supported',
+    tip_placeholder:'username.project',
+  }
+};
+
+let currentLang = 'en';
+function t(key){return (I18N[currentLang]||I18N.zh)[key]||key}
+
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    if(el.tagName==='INPUT'||el.tagName==='SELECT'){el.placeholder=t(key);return}
+    if(el.tagName==='LABEL'){if(!el.textContent.startsWith('🎨')&&!el.textContent.startsWith('📋')){el.textContent=t(key);return}}
+    el.textContent=t(key);
+  });
+  // Format select
+  const fmtSelect=document.getElementById('fmt');
+  const rawOpt=fmtSelect.options[0], fmtOpt=fmtSelect.options[1];
+  if(rawOpt)rawOpt.textContent=t('fmt_raw');
+  if(fmtOpt)fmtOpt.textContent=t('fmt_k');
+  document.documentElement.lang=currentLang==='zh'?'zh-CN':'en';
+  // restore health text after lang switch
+  const h=document.getElementById('healthText');
+  const s=h.dataset.health;
+  if(s==='ok')h.textContent=t('health_ok');
+  else if(s==='err')h.textContent=t('health_err');
+  else h.textContent=t('health_checking');
+}
+
+// ===== Theme =====
+function getTheme(){
+  const saved=localStorage.getItem('vb-theme');
+  if(saved)return saved;
+  return window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+}
+// Follow system changes when no saved preference
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change',e=>{
+  if(!localStorage.getItem('vb-theme'))setTheme(e.matches?'dark':'light');
+});
+function setTheme(t){document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'');
+  document.getElementById('themeToggle').textContent=t==='dark'?'☀️':'🌙';
+  localStorage.setItem('vb-theme',t);
+}
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  setTheme(getTheme()==='dark'?'light':'dark');
+});
+setTheme(getTheme());
+
+// ===== Lang Switch =====
+document.querySelectorAll('.lang-switch button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentLang=btn.dataset.lang;
+    applyLang();
+    updatePreview();
+  });
+});
+
+// ===== Health Check =====
+(async function(){
+  try{
+    const r=await fetch('/health',{signal:AbortSignal.timeout(5000)});
+    const d=await r.json();
+    if(r.ok&&d.status==='ok'){
+      document.getElementById('healthDot').className='health-dot ok';
+      const ht=document.getElementById('healthText');
+      ht.dataset.health='ok';
+      ht.textContent=t('health_ok');
+    }else throw Error('nok');
+  }catch(e){
+    document.getElementById('healthDot').className='health-dot err';
+    const ht=document.getElementById('healthText');
+    ht.dataset.health='err';
+    ht.textContent=t('health_err');
+  }
+})();
+
+// ===== Badge Builder =====
+const BASE='http://192.168.2.157:55000';
+const pidIn=document.getElementById('pid');
+const ltextIn=document.getElementById('ltext');
+const lcolorIn=document.getElementById('lcolor');
+const rcolorIn=document.getElementById('rcolor');
+const fmtIn=document.getElementById('fmt');
+const previewImg=document.getElementById('previewImg');
+const previewUrl=document.getElementById('previewUrl');
+const codeContent=document.getElementById('codeContent');
+
+function buildBadgeURL(){
+  const pid=pidIn.value.trim()||'untitled';
+  let url=`${BASE}/badge?page_id=${encodeURIComponent(pid)}`;
+  const lt=ltextIn.value.trim();if(lt)url+=`&left_text=${encodeURIComponent(lt)}`;
+  const lc=lcolorIn.value.trim();if(lc)url+=`&left_color=${encodeURIComponent(lc)}`;
+  const rc=rcolorIn.value.trim();if(rc)url+=`&right_color=${encodeURIComponent(rc)}`;
+  if(fmtIn.value)url+='&format=true';
+  if(document.getElementById('qonly').checked)url+='&query_only=true';
+  return url;
+}
+
+function updatePreview(){
+  const url=buildBadgeURL();
+  previewImg.src=url+'&t='+Date.now();
+  previewUrl.textContent=url;
+  const md=`![visitors](${url})`;
+  const html=`<img src="${url}" alt="visitor badge"/>`;
+  document.querySelector('.code-tab.active').dataset.tab=='markdown'
+    ? codeContent.textContent=md
+    : document.querySelector('.code-tab.active').dataset.tab=='html'
+      ? codeContent.textContent=html
+      : codeContent.textContent=url;
+}
+
+function getActiveCode(){
+  const url=buildBadgeURL();
+  const tab=document.querySelector('.code-tab.active').dataset.tab;
+  if(tab==='markdown')return `![visitors](${url})`;
+  if(tab==='html')return `<img src="${url}" alt="visitor badge"/>`;
+  return url;
+}
+
+// Focus: fill default if empty
+function fillDefault(e){
+  const el=e.target;
+  if(el.value===''&&el.dataset.default){
+    el.value=el.dataset.default;
+    if(el.id==='lcolor')syncColor(lcolorIn,lPicker,lBtn);
+    if(el.id==='rcolor')syncColor(rcolorIn,rPicker,rBtn);
+    updatePreview();
+  }
+}
+ltextIn.addEventListener('focus',fillDefault);
+lcolorIn.addEventListener('focus',fillDefault);
+rcolorIn.addEventListener('focus',fillDefault);
+
+pidIn.addEventListener('input',updatePreview);
+ltextIn.addEventListener('input',updatePreview);
+lcolorIn.addEventListener('input',updatePreview);
+rcolorIn.addEventListener('input',updatePreview);
+fmtIn.addEventListener('change',updatePreview);
+document.getElementById('qonly').addEventListener('change',updatePreview);
+
+// Color picker sync
+const lPicker=document.getElementById('lPicker');
+const rPicker=document.getElementById('rPicker');
+const lBtn=document.getElementById('lbtn');
+const rBtn=document.getElementById('rbtn');
+
+function syncColor(input, picker, btn){
+  const v=input.value.trim();
+  if(/^#[0-9a-f]{6}$/i.test(v)){
+    picker.value=v;btn.style.background=v;
+  }else if(/^#[0-9a-f]{3}$/i.test(v)){
+    const h='#'+v[1]+v[1]+v[2]+v[2]+v[3]+v[3];
+    picker.value=h;btn.style.background=v;
+  }else{
+    const t=new Option().style;t.color=v;
+    if(t.color)btn.style.background=v
+  }
+}
+
+lcolorIn.addEventListener('input',()=>{syncColor(lcolorIn,lPicker,lBtn);updatePreview()});
+lPicker.addEventListener('input',()=>{
+  lcolorIn.value=lPicker.value;
+  lBtn.style.background=lPicker.value;
+  updatePreview()
+});
+
+rcolorIn.addEventListener('input',()=>{syncColor(rcolorIn,rPicker,rBtn);updatePreview()});
+rPicker.addEventListener('input',()=>{
+  rcolorIn.value=rPicker.value;
+  rBtn.style.background=rPicker.value;
+  updatePreview()
+});
+
+// ===== Code Tabs =====
+document.querySelectorAll('.code-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.code-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    codeContent.textContent=getActiveCode();
+  });
+});
+
+// ===== Copy =====
+document.getElementById('copyBtn').addEventListener('click',async()=>{
+  const text=getActiveCode();
+  try{
+    await navigator.clipboard.writeText(text);
+    const btn=document.getElementById('copyBtn');
+    const orig=btn.textContent;
+    btn.textContent='✓ '+t('copied');
+    setTimeout(()=>btn.textContent=orig,1500);
+  }catch(e){
+    const t=document.getElementById('toast');
+    t.textContent=t('no_copy');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2000);
+  }
+});
+
+// Init
+applyLang();
+updatePreview();
+syncColor(lcolorIn,lPicker,lBtn);
+syncColor(rcolorIn,rPicker,rBtn);
+</script>
+</body>
 </html>
