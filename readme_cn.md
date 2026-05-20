@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://visitor-badge.laobi.icu/badge?page_id=hehuapei.visitor-badge&left_text=Visitors" alt="visitor badge">
-</p>
-
 <h1 align="center">👀 Visitor Badge · 访客计数徽章</h1>
 <p align="center">
   一个免费、轻量的访客计数器徽章，适用于 GitHub README、Issues、Wiki 页面。
@@ -15,6 +11,9 @@
   <a href="#自托管部署">自托管部署</a>
 </p>
 
+<p align="center">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=hehuapei.visitor-badge&left_text=Visitors" alt="visitor badge">
+</p>
 ---
 
 ## 快速开始
