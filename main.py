@@ -88,10 +88,37 @@ def visitor_svg() -> Response:
     if request.args.get("format") is not None:
         latest_count = format_count(latest_count)
 
-
     home = "https://visitor-badge.laobi.icu"
 
     svg = badge(left_text=left_text, right_text=str(latest_count), left_color=str(left_color), right_color=str(right_color), right_link=home, left_link=home)
+    # 修复 QQ Bot 不识别 xlink:href 的问题
+    svg = svg.replace('xlink:href=', 'href=')
+
+    # 自定义尺寸 & 圆角
+    new_radius = request.args.get('radius')
+    new_height = request.args.get('height')
+    if new_radius:
+        svg = svg.replace('rx="3"', f'rx="{new_radius}"')
+    if new_height:
+        h = int(new_height)
+        ratio = h / 20.0
+        import re
+        # 缩放 SVG width & height
+        svg = re.sub(r'(<svg[^>]*)width="([\d.]+)"(.*?height=")(\d+)(")',
+            lambda m: f'{m.group(1)}width="{float(m.group(2))*ratio:.1f}"{m.group(3)}{h}{m.group(5)}', svg)
+        # 缩放所有 rect 的 width, height, x
+        svg = re.sub(r'(<rect[^>]*)width="([\d.]+)"(.*?height=")([\d.]+)(")',
+            lambda m: f'{m.group(1)}width="{float(m.group(2))*ratio:.1f}"{m.group(3)}{float(m.group(4))*ratio:.1f}{m.group(5)}', svg)
+        svg = re.sub(r'(<rect[^>]*)x="([\d.]+)"',
+            lambda m: f'{m.group(1)}x="{float(m.group(2))*ratio:.1f}"', svg)
+        # 缩放 text x, y, font-size, textLength
+        svg = re.sub(r'(<text[^>]*)x="([\d.]+)"(.*?y=")([\d.]+)(")',
+            lambda m: f'{m.group(1)}x="{float(m.group(2))*ratio:.1f}"{m.group(3)}{float(m.group(4))*ratio:.0f}{m.group(5)}', svg)
+        svg = re.sub(r'(font-size=")(\d+)(")',
+            lambda m: f'{m.group(1)}{float(m.group(2))*ratio:.0f}{m.group(3)}', svg)
+        svg = re.sub(r'(textLength=")([\d.]+)(")',
+            lambda m: f'{m.group(1)}{float(m.group(2))*ratio:.1f}{m.group(3)}', svg)
+
     expiry_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
 
     headers = {'Cache-Control': 'no-cache,max-age=0,no-store,s-maxage=0,proxy-revalidate',
