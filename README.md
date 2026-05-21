@@ -90,11 +90,15 @@ All parameters are optional except `page_id`.
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&query_only=true)
 ```
 
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&query_only=true)
+
 **Combo: all together**
 
 ```markdown
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=Views&left_color=%23595959&right_color=%231283c3&format=true)
 ```
+
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&left_text=Views&left_color=%23595959&right_color=%231283c3&format=true)
 
 ---
 
