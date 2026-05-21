@@ -8,7 +8,8 @@
   <a href="#quick-start">Quick Start</a> ·
   <a href="#parameters">Parameters</a> ·
   <a href="#examples">Examples</a> ·
-  <a href="#deploy">Self-host</a>
+  <a href="#self-host">Self-host</a> ·
+  <a href="readme_cn.md">中文</a>
 </p>
 
 <p align="center">
@@ -40,6 +41,8 @@ All parameters are optional except `page_id`.
 | `left_color` | — | Left side color (name or hex) | `#595959` |
 | `right_color` | — | Right side color (name or hex) | `#1283c3` |
 | `format` | — | Compact number display (1K / 1M) | disabled |
+| `radius` | — | Badge corner radius (px) | `3` |
+| `height` | — | Badge height (px), scales proportionally | `20` |
 | `query_only` | — | Query without incrementing counter | disabled |
 
 > **Note:** For hex colors with `#`, URL-encode `#` as `%23`.  
