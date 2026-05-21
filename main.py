@@ -107,7 +107,7 @@ def visitor_svg() -> Response:
         def scale_attrs(m):
             tag = m.group(0)
             def repl_num(k):
-                m2 = re.search(k + r'="([\d.]+)"', tag)
+                m2 = re.search(r'(?<=\s)' + k + r'="([\d.]+)"', tag)
                 if m2:
                     old = tag[m2.start():m2.end()]
                     new = f'{k}="{float(m2.group(1))*ratio:.1f}"'
