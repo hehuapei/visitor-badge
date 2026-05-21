@@ -134,6 +134,14 @@ python3 main.py
 
 ---
 
+## 赞助支持
+
+💖 如果这个项目帮到了你，欢迎赞助支持项目开发：
+
+[![PayPal](https://img.shields.io/badge/PayPal-003087?style=flat&logo=paypal&logoColor=white)](https://paypal.me/hehuapei) [![爱发电](https://img.shields.io/badge/爱发电-946CE6?style=flat&logoColor=white)](https://www.afdian.com/a/hehuapei)
+
+---
+
 ## 致谢
 
 Fork 自 [jwenjian/visitor-badge](https://github.com/jwenjian/visitor-badge)，进行了优化和基础设施更新。
