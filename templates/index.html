@@ -141,7 +141,7 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
     <a href="https://github.com/hehuapei/visitor-badge" target="_blank">GitHub ↗</a>
     <div class="lang-switch">
       <button data-lang="zh">中</button>
-      <button data-lang="en" class="active">EN</button>
+      <button data-lang="en">EN</button>
     </div>
     <button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button>
   </nav>
@@ -204,6 +204,16 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
             </div>
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bradius" data-i18n="builder_radius">圆角</label>
+            <input id="bradius" value="" placeholder="3" data-default="3" spellcheck="false">
+          </div>
+          <div class="form-group">
+            <label for="bheight" data-i18n="builder_height">高度</label>
+            <input id="bheight" value="" placeholder="20" data-default="20" spellcheck="false">
+          </div>
+        </div>
         <div class="form-group" style="margin-top:8px">
           <label class="checkbox-line">
             <input type="checkbox" id="qonly">
@@ -243,12 +253,14 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
     <p class="section-sub" data-i18n="docs_sub">所有参数均可选，除 page_id 外</p>
     <table class="param-table">
       <thead><tr><th data-i18n="param_name">参数</th><th data-i18n="param_required">必填</th><th data-i18n="param_desc">说明</th><th data-i18n="param_example">示例</th></tr></thead>
-      <tbody>
+        <tbody>
         <tr><td><code>page_id</code></td><td data-i18n="yes">✅</td><td data-i18n="pid_desc">页面的唯一标识，建议用 <code>用户名.仓库名</code></td><td><code>jwenjian.visitor-badge</code></td></tr>
         <tr><td><code>left_text</code></td><td data-i18n="no">—</td><td data-i18n="ltext_desc">徽章左侧文字</td><td><code>visitors</code></td></tr>
         <tr><td><code>left_color</code></td><td data-i18n="no">—</td><td data-i18n="lcolor_desc">左侧颜色（名称或 HEX）</td><td><code>#595959</code></td></tr>
         <tr><td><code>right_color</code></td><td data-i18n="no">—</td><td data-i18n="rcolor_desc">右侧颜色（名称或 HEX）</td><td><code>#1283c3</code></td></tr>
         <tr><td><code>format</code></td><td data-i18n="no">—</td><td data-i18n="fmt_desc">启用数值缩写（1K / 1M）</td><td><code>true</code></td></tr>
+        <tr><td><code>radius</code></td><td data-i18n="no">—</td><td data-i18n="radius_desc">边框圆角大小</td><td><code>3</code></td></tr>
+        <tr><td><code>height</code></td><td data-i18n="no">—</td><td data-i18n="height_desc">徽章高度（px），等比例缩放</td><td><code>20</code></td></tr>
         <tr><td><code>query_only</code></td><td data-i18n="no">—</td><td data-i18n="qonly_desc">只查询不增加计数</td><td><code>true</code></td></tr>
       </tbody>
     </table>
@@ -299,14 +311,14 @@ const I18N = {
     health_checking:'正在检查服务状态…',health_ok:'服务正常',health_err:'服务异常',
     builder_title:'🎨 Badge 在线定制',
     builder_pid:'页面 ID *',builder_ltext:'左侧文字',builder_format:'数值格式',
-    builder_lcolor:'左侧颜色',builder_rcolor:'右侧颜色',builder_qonly:'仅查询，不增加计数',builder_preview:'预览',
+    builder_lcolor:'左侧颜色',builder_rcolor:'右侧颜色',builder_qonly:'仅查询，不增加计数',builder_radius:'圆角',builder_height:'高度',builder_preview:'预览',
     copy_title:'📋 复制代码',copy_btn:'复制',copied:'已复制！',
     docs_title:'📖 参数说明',docs_sub:'所有参数均为可选，除 page_id 外',
     param_name:'参数',param_required:'必填',param_desc:'说明',param_example:'示例',
     yes:'✅',no:'—',
     pid_desc:'页面的唯一标识，建议用 用户名.仓库名',
     ltext_desc:'徽章左侧文字',lcolor_desc:'左侧颜色（名称或 HEX）',
-    rcolor_desc:'右侧颜色（名称或 HEX）',fmt_desc:'启用数值缩写（1K / 1M）',
+    rcolor_desc:'右侧颜色（名称或 HEX）',fmt_desc:'启用数值缩写（1K / 1M）',radius_desc:'边框圆角大小',height_desc:'徽章高度（px），等比例缩放',
     qonly_desc:'只查询不增加计数',
     faq_title:'❓ FAQ',faq_sub:'常见问题',
     faq1_q:'能在 HTML 里用吗？',
@@ -329,7 +341,7 @@ const I18N = {
     health_checking:'Checking service status…',health_ok:'Service healthy',health_err:'Service unavailable',
     builder_title:'🎨 Badge Builder',
     builder_pid:'Page ID *',builder_ltext:'Left text',builder_format:'Format',
-    builder_lcolor:'Left color',builder_rcolor:'Right color',builder_qonly:'Query only, no increment',builder_preview:'Preview',
+    builder_lcolor:'Left color',builder_rcolor:'Right color',builder_qonly:'Query only, no increment',builder_radius:'Radius',builder_height:'Height',builder_preview:'Preview',
     copy_title:'📋 Copy Code',copy_btn:'Copy',copied:'Copied!',
     docs_title:'📖 Parameters',docs_sub:'All parameters are optional except page_id',
     param_name:'Parameter',param_required:'Required',param_desc:'Description',param_example:'Example',
@@ -347,16 +359,19 @@ const I18N = {
     faq3_a:'Yes, completely free with no hidden limits. If you find it useful, give it a ⭐!',
     faq4_q:'How does counting work?',
     faq4_a:'Each page_id counts independently. Each page load +1. Use query_only=true to check without incrementing.',
-    fmt_raw:'Raw',fmt_k:'1K / 1M',
+    fmt_raw:'Raw',fmt_k:'1K / 1M',radius_desc:'Border radius',height_desc:'Badge height (px), scales proportionally',
     no_copy:'Clipboard not supported',
     tip_placeholder:'username.project',
   }
 };
 
-let currentLang = 'en';
+let currentLang = localStorage.getItem('visitor-badge-lang') || 'en';
 function t(key){return (I18N[currentLang]||I18N.zh)[key]||key}
 
 function applyLang(){
+  document.querySelectorAll('.lang-switch button').forEach(b=>{
+    b.classList.toggle('active',b.dataset.lang===currentLang);
+  });
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const key=el.dataset.i18n;
     if(el.tagName==='INPUT'||el.tagName==='SELECT'){el.placeholder=t(key);return}
@@ -402,6 +417,7 @@ document.querySelectorAll('.lang-switch button').forEach(btn=>{
     document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentLang=btn.dataset.lang;
+    localStorage.setItem('visitor-badge-lang', currentLang);
     applyLang();
     updatePreview();
   });
@@ -445,6 +461,8 @@ function buildBadgeURL(){
   const rc=rcolorIn.value.trim();if(rc)url+=`&right_color=${encodeURIComponent(rc)}`;
   if(fmtIn.value)url+='&format=true';
   if(document.getElementById('qonly').checked)url+='&query_only=true';
+  const br=document.getElementById('bradius').value.trim();if(br&&br!='3')url+=`&radius=${encodeURIComponent(br)}`;
+  const bh=document.getElementById('bheight').value.trim();if(bh&&bh!='20')url+=`&height=${encodeURIComponent(bh)}`;
   return url;
 }
 
@@ -489,6 +507,10 @@ lcolorIn.addEventListener('input',updatePreview);
 rcolorIn.addEventListener('input',updatePreview);
 fmtIn.addEventListener('change',updatePreview);
 document.getElementById('qonly').addEventListener('change',updatePreview);
+document.getElementById('bradius').addEventListener('focus',fillDefault);
+document.getElementById('bradius').addEventListener('input',updatePreview);
+document.getElementById('bheight').addEventListener('focus',fillDefault);
+document.getElementById('bheight').addEventListener('input',updatePreview);
 
 // Color picker sync
 const lPicker=document.getElementById('lPicker');
