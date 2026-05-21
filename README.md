@@ -140,9 +140,9 @@ Requires a compatible counting backend. The project expects a count service at a
 
 ## Sponsor
 
-If this project helps you, consider supporting its development:
+💖If this project helps you, consider supporting its development:
 
-💖 [![PayPal](https://img.shields.io/badge/PayPal-003087?style=flat&logo=paypal&logoColor=white)](https://paypal.me/hehuapei) [![爱发电](https://img.shields.io/badge/爱发电-946CE6?style=flat&logoColor=white)](https://www.afdian.com/a/hehuapei)
+[![PayPal](https://img.shields.io/badge/PayPal-003087?style=flat&logo=paypal&logoColor=white)](https://paypal.me/hehuapei) [![爱发电](https://img.shields.io/badge/爱发电-946CE6?style=flat&logoColor=white)](https://www.afdian.com/a/hehuapei)
 
 ---
 
