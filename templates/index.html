@@ -49,7 +49,8 @@ pre code{background:none;padding:0;font-size:.85rem}
 /* ===== Hero ===== */
 .hero{text-align:center;padding:60px 20px 40px}
 .hero h1{font-size:2rem;font-weight:800;margin-bottom:12px;letter-spacing:-.02em}
-.hero p{color:var(--text2);font-size:1.05rem;max-width:580px;margin:0 auto 28px}
+.hero p{color:var(--text2);font-size:1.05rem;max-width:580px;margin:0 auto 12px}
+.hero-stat{color:var(--text2);font-size:.8rem;margin:0 0 28px;opacity:.7}
 .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .hero-actions a{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:8px;font-weight:600;font-size:.95rem;transition:all .15s}
 .btn-primary{background:var(--accent);color:#fff}
@@ -120,6 +121,14 @@ details .faq-body{padding:12px 0 8px;color:var(--text2);font-size:.92rem;line-he
 
 /* ===== Footer ===== */
 footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);color:var(--text2);font-size:.85rem}
+.sponsor{text-align:center;padding:40px 20px}
+.sponsor p{color:var(--text2);font-size:.92rem;margin:0 0 16px}
+.sponsor-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sponsor-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:8px;font-weight:600;font-size:.9rem;transition:all .15s;text-decoration:none}
+.sponsor-btn.paypal{background:#003087;color:#fff}
+.sponsor-btn.paypal:hover{background:#002060;transform:translateY(-1px);text-decoration:none}
+.sponsor-btn.afdian{background:#946CE6;color:#fff}
+.sponsor-btn.afdian:hover{background:#7B4FD4;transform:translateY(-1px);text-decoration:none}
 
 /* ===== Toast ===== */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 20px;border-radius:8px;font-size:.85rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
@@ -151,6 +160,7 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
 <section class="hero">
   <h1 data-i18n="hero_title">为你的 GitHub 项目添加访客徽章</h1>
   <p data-i18n="hero_desc">一行代码，追踪 README、Issues 和 Wiki 的浏览量。完全免费，无需注册。</p>
+  <p class="hero-stat" id="heroStat" data-i18n="hero_stat">⏳ 自 2020年3月上线，已稳定运行 6 年</p>
   <div class="hero-actions">
     <a href="#builder" class="btn-primary" data-i18n="hero_cta1">🎨 开始定制</a>
     <a href="#docs" class="btn-outline" data-i18n="hero_cta2">📖 查看文档</a>
@@ -292,6 +302,21 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
   </div>
 </section>
 
+<!-- Sponsor -->
+<section class="sponsor">
+  <p data-i18n="sponsor_text">💖 如果这个项目帮到了你，欢迎赞助支持项目开发</p>
+  <div class="sponsor-links">
+    <a class="sponsor-btn paypal" href="https://paypal.me/hehuapei" target="_blank">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/><path d="M19.83 4.248c-.24.024-.48.035-.717.035h-6.406a.893.893 0 0 0-.883.755l-1.2 7.616c-.024.15.024.299.127.41.103.108.25.168.403.168h2.648a.893.893 0 0 0 .883-.755l.258-1.638a.893.893 0 0 1 .882-.756h1.575c3.828 0 6.824-1.55 7.7-6.04.37-1.89.174-3.367-.767-4.357-1.455-1.533-4.01-1.597-5.505-1.396z" opacity=".3"/></svg>
+      PayPal
+    </a>
+    <a class="sponsor-btn afdian" href="https://www.afdian.com/a/hehuapei" target="_blank">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.5 6.5h3v4.5h4v3h-4V18h-3v-4H6.5v-3H10.5V6.5z"/></svg>
+      爱发电
+    </a>
+  </div>
+</section>
+
 <!-- Footer -->
 <footer>
   <p>Made with ❤️ by <a href="https://github.com/hehuapei" target="_blank">wiken</a> · <a href="https://github.com/hehuapei/visitor-badge" target="_blank">GitHub</a></p>
@@ -307,6 +332,7 @@ const I18N = {
     nav_home:'首页',nav_docs:'文档',nav_faq:'FAQ',
     hero_title:'为你的 GitHub 项目添加访客徽章',
     hero_desc:'一行代码，追踪 README、Issues 和 Wiki 的浏览量。完全免费，无需注册。',
+    hero_stat:'⏳ 自 2020年3月上线，已稳定运行 {years} 年',
     hero_cta1:'🎨 开始定制',hero_cta2:'📖 查看文档',
     health_checking:'正在检查服务状态…',health_ok:'服务正常',health_err:'服务异常',
     builder_title:'🎨 Badge 在线定制',
@@ -329,6 +355,7 @@ const I18N = {
     faq3_a:'是的，永久免费，没有隐藏限制。如果觉得好用，给个 ⭐ 就行。',
     faq4_q:'计数规则是什么？',
     faq4_a:'每个 page_id 独立计数，同一页面每次加载 +1。使用 query_only=true 可以不增加计数只查询。',
+    sponsor_text:'💖 如果这个项目帮到了你，欢迎赞助支持项目开发',
     fmt_raw:'原始',fmt_k:'1K / 1M',
     no_copy:'当前浏览器不支持复制',
     tip_placeholder:'username.visitor-badge',
@@ -337,6 +364,7 @@ const I18N = {
     nav_home:'Home',nav_docs:'Docs',nav_faq:'FAQ',
     hero_title:'Visitor Badge for Your GitHub Projects',
     hero_desc:'Track page views for README, Issues, and Wiki with one line of Markdown. Free, no sign-up required.',
+    hero_stat:'⏳ Running since Mar 2020 · {years}+ years of stable service',
     hero_cta1:'🎨 Customize',hero_cta2:'📖 Read Docs',
     health_checking:'Checking service status…',health_ok:'Service healthy',health_err:'Service unavailable',
     builder_title:'🎨 Badge Builder',
@@ -359,6 +387,7 @@ const I18N = {
     faq3_a:'Yes, completely free with no hidden limits. If you find it useful, give it a ⭐!',
     faq4_q:'How does counting work?',
     faq4_a:'Each page_id counts independently. Each page load +1. Use query_only=true to check without incrementing.',
+    sponsor_text:'💖 If this project helps you, consider supporting its development',
     fmt_raw:'Raw',fmt_k:'1K / 1M',radius_desc:'Border radius',height_desc:'Badge height (px), scales proportionally',
     no_copy:'Clipboard not supported',
     tip_placeholder:'username.project',
@@ -366,7 +395,7 @@ const I18N = {
 };
 
 let currentLang = localStorage.getItem('visitor-badge-lang') || 'en';
-function t(key){return (I18N[currentLang]||I18N.zh)[key]||key}
+function t(key){let s=(I18N[currentLang]||I18N.zh)[key]||key;if(s.includes('{years}')){let y=Math.floor((Date.now()-new Date('2020-03-27').getTime())/31536000000);s=s.replace('{years}',y)}return s}
 
 function applyLang(){
   document.querySelectorAll('.lang-switch button').forEach(b=>{
