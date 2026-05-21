@@ -103,17 +103,24 @@ def visitor_svg() -> Response:
         h = int(new_height)
         ratio = h / 20.0
         import re
-        # 缩放 SVG width & height
-        svg = re.sub(r'(<svg[^>]*)width="([\d.]+)"(.*?height=")(\d+)(")',
-            lambda m: f'{m.group(1)}width="{float(m.group(2))*ratio:.1f}"{m.group(3)}{h}{m.group(5)}', svg)
-        # 缩放所有 rect 的 width, height, x
-        svg = re.sub(r'(<rect[^>]*)width="([\d.]+)"(.*?height=")([\d.]+)(")',
-            lambda m: f'{m.group(1)}width="{float(m.group(2))*ratio:.1f}"{m.group(3)}{float(m.group(4))*ratio:.1f}{m.group(5)}', svg)
-        svg = re.sub(r'(<rect[^>]*)x="([\d.]+)"',
-            lambda m: f'{m.group(1)}x="{float(m.group(2))*ratio:.1f}"', svg)
-        # 缩放 text x, y, font-size, textLength
-        svg = re.sub(r'(<text[^>]*)x="([\d.]+)"(.*?y=")([\d.]+)(")',
-            lambda m: f'{m.group(1)}x="{float(m.group(2))*ratio:.1f}"{m.group(3)}{float(m.group(4))*ratio:.0f}{m.group(5)}', svg)
+
+        def scale_attrs(m):
+            tag = m.group(0)
+            def repl_num(k):
+                m2 = re.search(k + r'="([\d.]+)"', tag)
+                if m2:
+                    old = tag[m2.start():m2.end()]
+                    new = f'{k}="{float(m2.group(1))*ratio:.1f}"'
+                    return tag[:m2.start()] + new + tag[m2.end():], True
+                return tag, False
+            # 缩放 SVG、rect、linearGradient 等所有标签的数字属性
+            for k in ('width', 'height', 'x', 'y', 'rx'):
+                tag, _ = repl_num(k)
+            return tag
+
+        # 等比例缩放所有标签的数字属性
+        svg = re.sub(r'<[a-z]+[^>]*>', lambda m: scale_attrs(m), svg)
+        # font-size 和 textLength
         svg = re.sub(r'(font-size=")(\d+)(")',
             lambda m: f'{m.group(1)}{float(m.group(2))*ratio:.0f}{m.group(3)}', svg)
         svg = re.sub(r'(textLength=")([\d.]+)(")',
