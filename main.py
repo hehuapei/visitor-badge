@@ -145,6 +145,17 @@ def health():
         return {'status': 'error', 'detail': str(e)}, 502
 
 
+@app.route("/stats")
+def stats():
+    try:
+        resp = requests.get('http://127.0.0.1:8080/stats', timeout=5)
+        if resp.status_code == 200:
+            return {'total_keys': resp.json().get('total_keys', 0)}
+        return {'status': 'error'}, 502
+    except Exception as e:
+        return {'status': 'error', 'detail': str(e)}, 502
+
+
 @app.route("/index.html")
 @app.route("/index")
 @app.route("/")

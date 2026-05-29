@@ -161,6 +161,7 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
   <h1 data-i18n="hero_title">为你的 GitHub 项目添加访客徽章</h1>
   <p data-i18n="hero_desc">一行代码，追踪 README、Issues 和 Wiki 的浏览量。完全免费，无需注册。</p>
   <p class="hero-stat" id="heroStat" data-i18n="hero_stat">⏳ 自 2020年3月上线，已稳定运行 6 年</p>
+  <p class="hero-stat" id="heroKeys" data-i18n="hero_keys" data-keys="…">📊 当前已为 … 个项目提供计数服务</p>
   <div class="hero-actions">
     <a href="#builder" class="btn-primary" data-i18n="hero_cta1">🎨 开始定制</a>
     <a href="#docs" class="btn-outline" data-i18n="hero_cta2">📖 查看文档</a>
@@ -333,6 +334,7 @@ const I18N = {
     hero_title:'为你的 GitHub 项目添加访客徽章',
     hero_desc:'一行代码，追踪 README、Issues 和 Wiki 的浏览量。完全免费，无需注册。',
     hero_stat:'⏳ 自 2020年3月上线，已稳定运行 {years} 年',
+    hero_keys:'📊 当前已为 {keys} 个项目提供计数服务',
     hero_cta1:'🎨 开始定制',hero_cta2:'📖 查看文档',
     health_checking:'正在检查服务状态…',health_ok:'服务正常',health_err:'服务异常',
     builder_title:'🎨 Badge 在线定制',
@@ -365,6 +367,7 @@ const I18N = {
     hero_title:'Visitor Badge for Your GitHub Projects',
     hero_desc:'Track page views for README, Issues, and Wiki with one line of Markdown. Free, no sign-up required.',
     hero_stat:'⏳ Running since Mar 2020 · {years}+ years of stable service',
+    hero_keys:'📊 Currently tracking {keys} projects',
     hero_cta1:'🎨 Customize',hero_cta2:'📖 Read Docs',
     health_checking:'Checking service status…',health_ok:'Service healthy',health_err:'Service unavailable',
     builder_title:'🎨 Badge Builder',
@@ -395,7 +398,14 @@ const I18N = {
 };
 
 let currentLang = localStorage.getItem('visitor-badge-lang') || 'en';
-function t(key){let s=(I18N[currentLang]||I18N.zh)[key]||key;if(s.includes('{years}')){let y=Math.floor((Date.now()-new Date('2020-03-27').getTime())/31536000000);s=s.replace('{years}',y)}return s}
+let totalKeys = null;
+function fmtKeys(n){if(n==null)return '…';if(n>=1000)return (n/1000).toFixed(n>=10000?0:1).replace(/\.0$/,'')+'K';return String(n)}
+function t(key){
+  let s=(I18N[currentLang]||I18N.zh)[key]||key;
+  if(s.includes('{years}')){let y=Math.floor((Date.now()-new Date('2020-03-27').getTime())/31536000000);s=s.replace('{years}',y)}
+  if(s.includes('{keys}')){s=s.replace('{keys}',fmtKeys(totalKeys))}
+  return s;
+}
 
 function applyLang(){
   document.querySelectorAll('.lang-switch button').forEach(b=>{
@@ -471,6 +481,19 @@ document.querySelectorAll('.lang-switch button').forEach(btn=>{
   }
 })();
 
+// ===== Stats (total keys) =====
+(async function(){
+  try{
+    const r=await fetch('/stats',{signal:AbortSignal.timeout(5000)});
+    const d=await r.json();
+    if(r.ok&&typeof d.total_keys==='number'){
+      totalKeys=d.total_keys;
+      const el=document.getElementById('heroKeys');
+      if(el)el.textContent=t('hero_keys');
+    }
+  }catch(e){/* silently ignore — keep placeholder */}
+})();
+
 // ===== Badge Builder =====
 const BASE = window.location.origin;
 const pidIn=document.getElementById('pid');
@@ -532,8 +555,6 @@ rcolorIn.addEventListener('focus',fillDefault);
 
 pidIn.addEventListener('input',updatePreview);
 ltextIn.addEventListener('input',updatePreview);
-lcolorIn.addEventListener('input',updatePreview);
-rcolorIn.addEventListener('input',updatePreview);
 fmtIn.addEventListener('change',updatePreview);
 document.getElementById('qonly').addEventListener('change',updatePreview);
 document.getElementById('bradius').addEventListener('focus',fillDefault);
@@ -560,19 +581,29 @@ function syncColor(input, picker, btn){
   }
 }
 
+// Debounce picker `input` so the preview refreshes ~quietly while dragging
+// and fires right after mouse-up, instead of waiting for the picker to close.
+let pickerTimer=null;
+function schedulePickerPreview(){
+  clearTimeout(pickerTimer);
+  pickerTimer=setTimeout(updatePreview,80);
+}
+
 lcolorIn.addEventListener('input',()=>{syncColor(lcolorIn,lPicker,lBtn);updatePreview()});
 lPicker.addEventListener('input',()=>{
   lcolorIn.value=lPicker.value;
   lBtn.style.background=lPicker.value;
-  updatePreview()
+  schedulePickerPreview();
 });
+lPicker.addEventListener('change',updatePreview);
 
 rcolorIn.addEventListener('input',()=>{syncColor(rcolorIn,rPicker,rBtn);updatePreview()});
 rPicker.addEventListener('input',()=>{
   rcolorIn.value=rPicker.value;
   rBtn.style.background=rPicker.value;
-  updatePreview()
+  schedulePickerPreview();
 });
+rPicker.addEventListener('change',updatePreview);
 
 // ===== Code Tabs =====
 document.querySelectorAll('.code-tab').forEach(tab=>{
