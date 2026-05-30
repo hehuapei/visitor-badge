@@ -7,6 +7,8 @@ import requests
 from os import environ
 from dotenv import find_dotenv,load_dotenv
 
+from logos import list_logos, resolve_logo
+
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -89,8 +91,9 @@ def visitor_svg() -> Response:
         latest_count = format_count(latest_count)
 
     home = "https://visitor-badge.laobi.icu"
+    logo = resolve_logo(request.args.get('logo'))
 
-    svg = badge(left_text=left_text, right_text=str(latest_count), left_color=str(left_color), right_color=str(right_color), right_link=home, left_link=home)
+    svg = badge(left_text=left_text, right_text=str(latest_count), left_color=str(left_color), right_color=str(right_color), right_link=home, left_link=home, logo=logo)
     # 修复 QQ Bot 不识别 xlink:href 的问题
     svg = svg.replace('xlink:href=', 'href=')
 
@@ -160,7 +163,7 @@ def stats():
 @app.route("/index")
 @app.route("/")
 def index() -> Response:
-    return render_template('index.html')
+    return render_template('index.html', logos=list_logos())
 
 
 def identity_request_source() -> str:

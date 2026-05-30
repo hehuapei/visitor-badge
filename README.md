@@ -41,6 +41,7 @@ All parameters are optional except `page_id`.
 | `left_color` | — | Left side color (name or hex) | `#595959` |
 | `right_color` | — | Right side color (name or hex) | `#1283c3` |
 | `format` | — | Compact number display (1K / 1M) | disabled |
+| `logo` | — | Built-in local logo slug from the Simple Icons catalog | — |
 | `radius` | — | Badge corner radius (px) | `3` |
 | `height` | — | Badge height (px), scales proportionally | `20` |
 | `query_only` | — | Query without incrementing counter | disabled |
@@ -83,6 +84,17 @@ All parameters are optional except `page_id`.
 ```
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&format=true)
+
+**Built-in logo**
+
+```markdown
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&logo=github)
+```
+
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&logo=github)
+
+Example values: `github`, `gitlab`, `vercel`, `docker`, `npm`, `discord`, `x`, `githubactions`, `netlify`, `cloudflare`, `telegram`, `wechat`, `youtube`, `react`, `vite`, `vuedotjs`  
+Browse the full local catalog in the online builder.
 
 **Query only (don't increment)**
 

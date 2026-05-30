@@ -41,6 +41,7 @@
 | `left_color` | — | 左侧颜色（名称或 HEX） | `#595959` |
 | `right_color` | — | 右侧颜色（名称或 HEX） | `#1283c3` |
 | `format` | — | 数值缩写（1K / 1M） | 关闭 |
+| `logo` | — | 本地内建 logo slug，来源于 Simple Icons 目录 | — |
 | `radius` | — | 徽章圆角大小 | `3` |
 | `height` | — | 徽章高度（px），等比例缩放 | `20` |
 | `query_only` | — | 仅查询，不增加计数 | 关闭 |
@@ -83,6 +84,17 @@
 ```
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&format=true)
+
+**内建 Logo**
+
+```markdown
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&logo=github)
+```
+
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=jwenjian.visitor-badge&logo=github)
+
+示例值：`github`、`gitlab`、`vercel`、`docker`、`npm`、`discord`、`x`、`githubactions`、`netlify`、`cloudflare`、`telegram`、`wechat`、`youtube`、`react`、`vite`、`vuedotjs`  
+完整本地图标目录可在在线定制页中查看。
 
 **仅查询，不增加计数**
 

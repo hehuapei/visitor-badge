@@ -193,6 +193,15 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
             <select id="fmt"><option value="">原始</option><option value="1">1K / 1M</option></select>
           </div>
         </div>
+        <div class="form-group">
+          <label for="logo" data-i18n="builder_logo">Logo</label>
+          <select id="logo">
+            <option value="">None</option>
+            {% for logo in logos %}
+            <option value="{{ logo.slug }}">{{ logo.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
         <div class="form-row">
           <div class="form-group">
             <label for="lcolor" data-i18n="builder_lcolor">左侧颜色</label>
@@ -270,6 +279,7 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
         <tr><td><code>left_color</code></td><td data-i18n="no">—</td><td data-i18n="lcolor_desc">左侧颜色（名称或 HEX）</td><td><code>#595959</code></td></tr>
         <tr><td><code>right_color</code></td><td data-i18n="no">—</td><td data-i18n="rcolor_desc">右侧颜色（名称或 HEX）</td><td><code>#1283c3</code></td></tr>
         <tr><td><code>format</code></td><td data-i18n="no">—</td><td data-i18n="fmt_desc">启用数值缩写（1K / 1M）</td><td><code>true</code></td></tr>
+        <tr><td><code>logo</code></td><td data-i18n="no">—</td><td data-i18n="logo_desc">本地内建 logo slug，来源于 Simple Icons 目录</td><td><code>github</code></td></tr>
         <tr><td><code>radius</code></td><td data-i18n="no">—</td><td data-i18n="radius_desc">边框圆角大小</td><td><code>3</code></td></tr>
         <tr><td><code>height</code></td><td data-i18n="no">—</td><td data-i18n="height_desc">徽章高度（px），等比例缩放</td><td><code>20</code></td></tr>
         <tr><td><code>query_only</code></td><td data-i18n="no">—</td><td data-i18n="qonly_desc">只查询不增加计数</td><td><code>true</code></td></tr>
@@ -338,7 +348,7 @@ const I18N = {
     hero_cta1:'🎨 开始定制',hero_cta2:'📖 查看文档',
     health_checking:'正在检查服务状态…',health_ok:'服务正常',health_err:'服务异常',
     builder_title:'🎨 Badge 在线定制',
-    builder_pid:'页面 ID *',builder_ltext:'左侧文字',builder_format:'数值格式',
+    builder_pid:'页面 ID *',builder_ltext:'左侧文字',builder_format:'数值格式',builder_logo:'Logo',
     builder_lcolor:'左侧颜色',builder_rcolor:'右侧颜色',builder_qonly:'仅查询，不增加计数',builder_radius:'圆角',builder_height:'高度',builder_preview:'预览',
     copy_title:'📋 复制代码',copy_btn:'复制',copied:'已复制！',
     docs_title:'📖 参数说明',docs_sub:'所有参数均为可选，除 page_id 外',
@@ -346,7 +356,7 @@ const I18N = {
     yes:'✅',no:'—',
     pid_desc:'页面的唯一标识，建议用 用户名.仓库名',
     ltext_desc:'徽章左侧文字',lcolor_desc:'左侧颜色（名称或 HEX）',
-    rcolor_desc:'右侧颜色（名称或 HEX）',fmt_desc:'启用数值缩写（1K / 1M）',radius_desc:'边框圆角大小',height_desc:'徽章高度（px），等比例缩放',
+    rcolor_desc:'右侧颜色（名称或 HEX）',fmt_desc:'启用数值缩写（1K / 1M）',logo_desc:'本地内建 logo slug，来源于 Simple Icons 目录',radius_desc:'边框圆角大小',height_desc:'徽章高度（px），等比例缩放',
     qonly_desc:'只查询不增加计数',
     faq_title:'❓ FAQ',faq_sub:'常见问题',
     faq1_q:'能在 HTML 里用吗？',
@@ -371,7 +381,7 @@ const I18N = {
     hero_cta1:'🎨 Customize',hero_cta2:'📖 Read Docs',
     health_checking:'Checking service status…',health_ok:'Service healthy',health_err:'Service unavailable',
     builder_title:'🎨 Badge Builder',
-    builder_pid:'Page ID *',builder_ltext:'Left text',builder_format:'Format',
+    builder_pid:'Page ID *',builder_ltext:'Left text',builder_format:'Format',builder_logo:'Logo',
     builder_lcolor:'Left color',builder_rcolor:'Right color',builder_qonly:'Query only, no increment',builder_radius:'Radius',builder_height:'Height',builder_preview:'Preview',
     copy_title:'📋 Copy Code',copy_btn:'Copy',copied:'Copied!',
     docs_title:'📖 Parameters',docs_sub:'All parameters are optional except page_id',
@@ -379,7 +389,7 @@ const I18N = {
     yes:'✅',no:'—',
     pid_desc:'Unique page identifier, e.g. username.repo-name',
     ltext_desc:'Left-side label text',lcolor_desc:'Left color (name or HEX)',
-    rcolor_desc:'Right color (name or HEX)',fmt_desc:'Compact number format (1K / 1M)',
+    rcolor_desc:'Right color (name or HEX)',fmt_desc:'Compact number format (1K / 1M)',logo_desc:'Built-in local logo slug from the Simple Icons catalog',
     qonly_desc:'Query only, do not increment',
     faq_title:'❓ FAQ',faq_sub:'Frequently asked questions',
     faq1_q:'Can I use this in HTML?',
@@ -501,6 +511,7 @@ const ltextIn=document.getElementById('ltext');
 const lcolorIn=document.getElementById('lcolor');
 const rcolorIn=document.getElementById('rcolor');
 const fmtIn=document.getElementById('fmt');
+const logoIn=document.getElementById('logo');
 const previewImg=document.getElementById('previewImg');
 const previewUrl=document.getElementById('previewUrl');
 const codeContent=document.getElementById('codeContent');
@@ -512,6 +523,7 @@ function buildBadgeURL(){
   const lc=lcolorIn.value.trim();if(lc)url+=`&left_color=${encodeURIComponent(lc)}`;
   const rc=rcolorIn.value.trim();if(rc)url+=`&right_color=${encodeURIComponent(rc)}`;
   if(fmtIn.value)url+='&format=true';
+  if(logoIn.value)url+=`&logo=${encodeURIComponent(logoIn.value)}`;
   if(document.getElementById('qonly').checked)url+='&query_only=true';
   const br=document.getElementById('bradius').value.trim();if(br&&br!='3')url+=`&radius=${encodeURIComponent(br)}`;
   const bh=document.getElementById('bheight').value.trim();if(bh&&bh!='20')url+=`&height=${encodeURIComponent(bh)}`;
@@ -556,6 +568,7 @@ rcolorIn.addEventListener('focus',fillDefault);
 pidIn.addEventListener('input',updatePreview);
 ltextIn.addEventListener('input',updatePreview);
 fmtIn.addEventListener('change',updatePreview);
+logoIn.addEventListener('change',updatePreview);
 document.getElementById('qonly').addEventListener('change',updatePreview);
 document.getElementById('bradius').addEventListener('focus',fillDefault);
 document.getElementById('bradius').addEventListener('input',updatePreview);
