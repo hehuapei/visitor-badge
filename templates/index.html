@@ -409,7 +409,7 @@ const I18N = {
 
 let currentLang = localStorage.getItem('visitor-badge-lang') || 'en';
 let totalKeys = null;
-function fmtKeys(n){if(n==null)return '…';if(n>=1000)return (n/1000).toFixed(n>=10000?0:1).replace(/\.0$/,'')+'K';return String(n)}
+function fmtKeys(n){return n==null?'…':String(n)}
 function t(key){
   let s=(I18N[currentLang]||I18N.zh)[key]||key;
   if(s.includes('{years}')){let y=Math.floor((Date.now()-new Date('2020-03-27').getTime())/31536000000);s=s.replace('{years}',y)}
