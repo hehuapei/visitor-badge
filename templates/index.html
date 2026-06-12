@@ -492,7 +492,7 @@ document.querySelectorAll('.lang-switch button').forEach(btn=>{
 })();
 
 // ===== Stats (total keys) =====
-(async function(){
+async function refreshStats(){
   try{
     const r=await fetch('/stats',{signal:AbortSignal.timeout(5000)});
     const d=await r.json();
@@ -501,8 +501,10 @@ document.querySelectorAll('.lang-switch button').forEach(btn=>{
       const el=document.getElementById('heroKeys');
       if(el)el.textContent=t('hero_keys');
     }
-  }catch(e){/* silently ignore — keep placeholder */}
-})();
+  }catch(e){/* silently ignore — keep current value */}
+}
+refreshStats();
+setInterval(refreshStats,10000);
 
 // ===== Badge Builder =====
 const BASE = window.location.origin;
